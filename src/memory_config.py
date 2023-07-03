@@ -30,7 +30,6 @@ class MemoryConfig:
         return {
             "name": self.name,
             "short_memory_length": self.short_memory_length,
-            "long_memory_length": self.long_memory_length,
             "total_completions": self.total_completions,
             "total_response_time": self.total_response_time,
             "average_response_time": self.total_response_time / (self.total_completions or 1),
@@ -63,7 +62,6 @@ class MemoryConfig:
 
         self.name = memory_config["name"]
         self.short_memory_length = memory_config["short_memory_length"]
-        self.long_memory_length = memory_config["long_memory_length"]
         self.system_prompt = memory_config["system_prompt"]
         self.total_completions = memory_config["total_completions"]
         self.total_response_time = memory_config["total_response_time"]
@@ -73,8 +71,6 @@ class MemoryConfig:
             self.system_prompt = data["system_prompt"]
         if "short_memory_length" in data:
             self.short_memory_length = int(data["short_memory_length"])
-        if "long_memory_length" in data:
-            self.long_memory_length = int(data["long_memory_length"])
         self.save()
 
     def process_completion(self, response_time: int):
