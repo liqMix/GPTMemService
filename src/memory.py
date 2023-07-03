@@ -9,13 +9,17 @@ class Memory:
     def __init__(self, name: str):
         self.name = name
         self.short_memory = []
-        self.init_db()
+        self.db = self.init_db()
 
     def init_db(self):
         file_path = os.path.join(Config.data_directory, f"{self.name}.mem.gz")
-        if os.path.exists(file_path):
-            self.db = HyperDB()
-            self.db.load(file_path)
+        if not os.path.exists(file_path):
+            return None
+        
+        db = HyperDB()
+        db.load(file_path)
+        return db
+        
 
     def save(self):
         file_path = os.path.join(Config.data_directory, f"{self.name}.mem.gz")
