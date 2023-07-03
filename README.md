@@ -18,12 +18,13 @@ OpenAPI Key
 
 ## Run
 
-Edit `config.yaml`
-`python main.py`
+- Edit `config.yaml`
+- `python main.py`
 
 ## Endpoints
 
 `/ GET`
+
 Retrieves details about the current memory
 
 `/ POST`
@@ -38,9 +39,11 @@ Retrieves details about the current memory
 Generates a response from GPT using the memory by name. Returns text
 
 `/memory GET`
+
 Returns list of all the memory configurations
 
 `/memory/<name> GET`
+
 Retrieves the memory config by name
 
 `/memory/name POST`
@@ -57,6 +60,6 @@ Can be utilized to both create and update existing memory configurations
 
 ## TODO
 
-AuthN, AuthZ for API and for specific memory access
-Optimize memory swapping
-Optimize token fitting
+- AuthN, AuthZ for API and for specific memory access
+- Optimize memory swapping
+- Optimize token fitting
