@@ -5,7 +5,7 @@ import yaml
 class ServiceConfig:
     data_directory: str = "data"
     gpt_api_key: str = ""
-    gpt_model: str = "gpt-3.5-turbo"
+    model: str = "gpt-3.5-turbo"
     max_tokens: int = 4096
     response_reserve: int = 2048
     max_loaded_mem: int = 1

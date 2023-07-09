@@ -44,7 +44,7 @@ def create_completion():
         prompt = data["prompt"]
 
         if "name" not in data:
-            response = chatGPT.get_response("", prompt)
+            response = chatGPT.get_no_mem_response("", prompt)
             return jsonify(response)
 
         # Retrieve memory
@@ -52,12 +52,10 @@ def create_completion():
         config = MemoryConfig(name)
         memory = memory_manager.get_memory(name)
 
-        # Create system prompt given user prompt
-        system_prompt = memory.get_system_prompt(prompt, config)
-
         response_time = time.time()
+
         # Generate response
-        response = chatGPT.get_response(system_prompt, prompt)
+        response = chatGPT.get_response(memory, config, prompt)
 
         # Add to memory
         memory.add_to_memory(prompt, response, config)

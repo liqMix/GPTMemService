@@ -61,7 +61,7 @@ class Memory:
         short_term = self._get_from_short_memory()
 
         long_term_length = Config.max_tokens - Config.response_reserve - len(short_term) - len(config.system_prompt)
-        while len(str(long_term)) > long_term_length:
+        while len(str(long_term)) > long_term_length and len(long_term) > 0:
             long_term.pop()
         return f"""
         {config.system_prompt}

@@ -36,7 +36,8 @@ Retrieves details about the current memory
 }
 ```
 
-Generates a response from GPT using the memory by name. Returns text
+Generates a response from GPT using the memory by name. Returns text.
+Not providing name returns response without using any memory.
 
 `/memory GET`
 
