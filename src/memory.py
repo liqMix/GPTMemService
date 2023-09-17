@@ -15,11 +15,10 @@ class Memory:
         file_path = os.path.join(Config.data_directory, f"{self.name}.mem.gz")
         if not os.path.exists(file_path):
             return None
-        
+
         db = HyperDB()
         db.load(file_path)
         return db
-        
 
     def save(self):
         file_path = os.path.join(Config.data_directory, f"{self.name}.mem.gz")
@@ -60,13 +59,18 @@ class Memory:
         long_term = self._get_from_long_memory(user_prompt)
         short_term = self._get_from_short_memory()
 
-        long_term_length = Config.max_tokens - Config.response_reserve - len(short_term) - len(config.system_prompt)
+        long_term_length = (
+            Config.max_tokens
+            - Config.response_reserve
+            - len(short_term)
+            - len(config.system_prompt)
+        )
         while len(str(long_term)) > long_term_length and len(long_term) > 0:
             long_term.pop()
         return f"""
         {config.system_prompt}
-      Relative context:
-        {long_term}
-      Previous conversation:
-        {short_term}
-    """
+          Relative context:
+            {long_term}
+          Previous conversation:
+            {short_term}
+        """

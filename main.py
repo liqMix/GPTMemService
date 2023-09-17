@@ -1,15 +1,18 @@
 import time
 from flask import Flask, jsonify, request, Response
+from flask_cors import CORS
 from src.memory_manager import MemoryManager
 from src.gpt import ChatGPT
 from src.memory_config import MemoryConfig
 
 # Create an instance of the Flask class
 app = Flask(__name__)
+CORS(app)
 
 # Create the objects required for the service
 memory_manager = MemoryManager()
 chatGPT = ChatGPT()
+
 
 @app.route("/", methods=["GET"])
 def get_details():
@@ -35,16 +38,26 @@ def get_details():
 
 @app.route("/", methods=["POST"])
 def create_completion():
+    prompt = ""
+    system_prompt = ""
+    model = "gpt-3.5-turbo-16k"
+
     # Creates a completion
     try:
         data = request.get_json()
 
-        if "prompt" not in data:
-            raise Exception("Prompt not provided.")
-        prompt = data["prompt"]
+        if "prompt" in data:
+            prompt = data["prompt"]
+            chatGPT.check_moderation(prompt)
+
+        if "system_prompt" in data:
+            system_prompt = data["system_prompt"]
+            chatGPT.check_moderation(system_prompt)
 
         if "name" not in data:
-            response = chatGPT.get_no_mem_response("", prompt)
+            if "model" in data:
+                model = data["model"]
+            response = chatGPT.get_no_mem_response(prompt, system_prompt, model)
             return jsonify(response)
 
         # Retrieve memory
@@ -55,7 +68,7 @@ def create_completion():
         response_time = time.time()
 
         # Generate response
-        response = chatGPT.get_response(memory, config, prompt)
+        response = chatGPT.get_response(memory, config, prompt, system_prompt)
 
         # Add to memory
         memory.add_to_memory(prompt, response, config)
@@ -64,6 +77,32 @@ def create_completion():
         return jsonify(response)
     except Exception as e:
         return jsonify({"error": "Error generating response:" + str(e)}), 500
+
+
+@app.route("/image", methods=["POST"])
+def create_image():
+    n = 1
+    size = "256x256"
+    response_format = "b64_json"
+
+    try:
+        data = request.get_json()
+        if "prompt" not in data:
+            raise Exception("Prompt not provided.")
+        prompt = data["prompt"]
+
+        if "n" in data:
+            n = data["n"]
+        if "size" in data:
+            size = data["size"]
+        if "response_format" in data:
+            response_format = data["response_format"]
+
+        chatGPT.check_moderation(prompt)
+        image = chatGPT.get_image(prompt, n, size, response_format)
+        return jsonify(image)
+    except Exception as e:
+        return jsonify({"error": "Error generating image:" + str(e)}), 500
 
 
 @app.route("/memory", methods=["GET"])

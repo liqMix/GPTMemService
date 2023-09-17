@@ -1,5 +1,5 @@
 data_directory: data
-gpt_api_key: 
+gpt_api_key: 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
 model: gpt-3.5-turbo-16k
 max_tokens: 16384
 response_reserve: 8192
